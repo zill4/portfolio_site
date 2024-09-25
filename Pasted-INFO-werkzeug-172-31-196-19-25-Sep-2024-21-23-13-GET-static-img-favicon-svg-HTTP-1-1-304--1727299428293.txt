@@ -1,0 +1,39 @@
+INFO:werkzeug:172.31.196.19 - - [25/Sep/2024 21:23:13] "GET /static/img/favicon.svg HTTP/1.1" 304 -
+ERROR:main:Exception on /about [GET]
+Traceback (most recent call last):
+  File "/home/runner/MinimalistDevPortfolio/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/MinimalistDevPortfolio/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 882, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/MinimalistDevPortfolio/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 880, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/MinimalistDevPortfolio/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 865, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/MinimalistDevPortfolio/routes/main.py", line 13, in about
+    return render_template('about.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/MinimalistDevPortfolio/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 150, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/MinimalistDevPortfolio/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 131, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/MinimalistDevPortfolio/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "/home/runner/MinimalistDevPortfolio/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/MinimalistDevPortfolio/templates/about.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/runner/MinimalistDevPortfolio/templates/base.html", line 31, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/MinimalistDevPortfolio/templates/about.html", line 8, in block 'content'
+    {% if 'profile.jpg' in (config.STATIC_FOLDER | list_files) %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.TemplateRuntimeError: No filter named 'list_files' found.
+INFO:werkzeug:172.31.196.19 - - [25/Sep/2024 21:23:14] "GET /about HTTP/1.1" 500 -
+^C

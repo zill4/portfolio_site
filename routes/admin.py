@@ -3,6 +3,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash
 from models import db, BlogPost, User
 import logging
+from datetime import datetime
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -54,6 +55,7 @@ def edit_post(post_id):
     if request.method == 'POST':
         post.title = request.form['title']
         post.content = request.form['content']
+        post.date_posted = datetime.utcnow()  # Update the post date
         db.session.commit()
         flash('Post updated successfully!', 'success')
         return redirect(url_for('admin.dashboard'))
