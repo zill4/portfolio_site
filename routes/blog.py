@@ -8,12 +8,9 @@ logger = logging.getLogger(__name__)
 
 @blog_bp.route('/')
 def blog():
-    try:
-        posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
-        return render_template('blog.html', posts=posts)
-    except Exception as e:
-        logger.error(f"Error fetching blog posts: {str(e)}")
-        return "An error occurred while fetching blog posts", 500
+    page = request.args.get('page', 1, type=int)
+    posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).paginate(page=page, per_page=5)
+    return render_template('blog.html', posts=posts)
 
 @blog_bp.route('/<int:post_id>')
 def blog_post(post_id):

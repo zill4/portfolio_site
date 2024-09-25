@@ -122,3 +122,31 @@ a {
 .btn-danger:hover {
     background-color: #c82333;
 }
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination a, .pagination span {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.pagination a:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+}
+
+.pagination .current-page {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+}
+
+.pagination .ellipsis {
+    border: none;
+}
