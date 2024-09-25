@@ -49,11 +49,55 @@ a {
     text-decoration: none;
 }
 
-.blog-post, .project {
+#hero {
+    text-align: center;
+    padding: 40px 0;
+}
+
+#recent-posts {
     background-color: rgba(255, 255, 255, 0.05);
+    padding: 40px;
+    margin-bottom: 40px;
+    border-radius: 10px;
+}
+
+.blog-post {
+    background-color: rgba(255, 255, 255, 0.1);
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+
+.blog-post:hover {
+    transform: translateY(-5px);
+}
+
+.blog-post h3 {
+    margin-top: 0;
+}
+
+.date {
+    color: var(--secondary-color);
+    font-size: 0.9em;
+}
+
+.btn {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--secondary-color);
+}
+
+#about {
+    padding: 40px 0;
 }
 
 @media (max-width: 768px) {
