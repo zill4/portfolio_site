@@ -106,3 +106,19 @@ a {
         width: 95%;
     }
 }
+
+.admin-actions {
+    margin-top: 20px;
+}
+
+.admin-actions .btn {
+    margin-right: 10px;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}

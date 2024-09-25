@@ -14,6 +14,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
             login_user(user)
+            flash('Logged in successfully.', 'success')
             return redirect(url_for('admin.dashboard'))
         flash('Invalid username or password', 'error')
         logging.error(f"Login failed for user {username}. User exists: {user is not None}")
@@ -23,12 +24,14 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash('Logged out successfully.', 'success')
     return redirect(url_for('main.index'))
 
 @admin_bp.route('/dashboard')
 @login_required
 def dashboard():
-    posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).paginate(page=page, per_page=10)
     return render_template('admin/dashboard.html', posts=posts)
 
 @admin_bp.route('/new_post', methods=['GET', 'POST'])

@@ -5,6 +5,14 @@
 {% block content %}
 <h1>Admin Dashboard</h1>
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 <a href="{{ url_for('admin.new_post') }}" class="btn">Create New Post</a>
 
 <h2>Blog Posts</h2>
@@ -17,7 +25,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for post in posts %}
+        {% for post in posts.items %}
         <tr>
             <td>{{ post.title }}</td>
             <td>{{ post.date_posted.strftime('%Y-%m-%d %H:%M') }}</td>
@@ -31,4 +39,11 @@
         {% endfor %}
     </tbody>
 </table>
+
+{% if posts.has_prev %}
+<a href="{{ url_for('admin.dashboard', page=posts.prev_num) }}">&laquo; Previous</a>
+{% endif %}
+{% if posts.has_next %}
+<a href="{{ url_for('admin.dashboard', page=posts.next_num) }}">Next &raquo;</a>
+{% endif %}
 {% endblock %}
