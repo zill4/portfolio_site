@@ -55,7 +55,7 @@ a {
     padding: 40px 0;
 }
 
-#recent-posts {
+#recent-posts, #about, #projects, #links {
     background-color: rgba(255, 255, 255, 0.05);
     padding: 40px;
     margin-bottom: 40px;
@@ -97,10 +97,6 @@ a {
 .btn:hover {
     background-color: var(--accent-color);
     color: var(--bg-color);
-}
-
-#about {
-    padding: 40px 0;
 }
 
 @media (max-width: 768px) {
@@ -154,4 +150,13 @@ a {
 
 .pagination .ellipsis {
     border: none;
+}
+
+#links ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#links ul li {
+    margin-bottom: 10px;
 }
