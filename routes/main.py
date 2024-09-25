@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_mail import Message
 from models import BlogPost
-from main import mail
+from main import app, mail
 
 main_bp = Blueprint('main', __name__)
 

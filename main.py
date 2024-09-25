@@ -31,16 +31,23 @@ def create_tables():
     except Exception as e:
         logger.error(f"Error creating database tables: {str(e)}")
 
-# Import blueprints
-from routes import main_bp, blog_bp, projects_bp, admin_bp
+def create_app():
+    # Import blueprints
+    from routes.main import main_bp
+    from routes.blog import blog_bp
+    from routes.projects import projects_bp
+    from routes.admin import admin_bp
 
-# Register blueprints
-app.register_blueprint(main_bp)
-app.register_blueprint(blog_bp, url_prefix='/blog')
-app.register_blueprint(projects_bp, url_prefix='/projects')
-app.register_blueprint(admin_bp, url_prefix='/admin')
+    # Register blueprints
+    app.register_blueprint(main_bp)
+    app.register_blueprint(blog_bp, url_prefix='/blog')
+    app.register_blueprint(projects_bp, url_prefix='/projects')
+    app.register_blueprint(admin_bp, url_prefix='/admin')
+
+    return app
 
 if __name__ == "__main__":
     create_tables()
+    app = create_app()
     logger.info("Starting the Flask app...")
     app.run(host="0.0.0.0", port=5000, debug=True)
