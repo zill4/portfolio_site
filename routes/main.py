@@ -7,3 +7,7 @@ main_bp = Blueprint('main', __name__)
 def index():
     recent_posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).limit(3).all()
     return render_template('index.html', recent_posts=recent_posts)
+
+@main_bp.route('/about')
+def about():
+    return render_template('about.html')

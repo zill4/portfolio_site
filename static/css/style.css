@@ -160,3 +160,37 @@ a {
 #links ul li {
     margin-bottom: 10px;
 }
+
+.about-container {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-height: calc(100vh - 100px); /* Adjust based on your header/footer height */
+}
+
+.about-image, .about-content {
+    flex: 1;
+    padding: 40px;
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.about-content {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .about-container {
+        flex-direction: column;
+    }
+
+    .about-image, .about-content {
+        width: 100%;
+    }
+}
