@@ -10,10 +10,16 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        print(f"Debug: Submitted username: {username}")  # Debug info
+        print(f"Debug: Submitted password: {password}")  # Debug info (remove in production)
         user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password_hash, password):
-            login_user(user)
-            return redirect(url_for('admin.dashboard'))
+        print(f"Debug: User exists: {user is not None}")  # Debug info
+        if user:
+            password_check = check_password_hash(user.password_hash, password)
+            print(f"Debug: Password check passed: {password_check}")  # Debug info
+            if password_check:
+                login_user(user)
+                return redirect(url_for('admin.dashboard'))
         flash('Invalid username or password', 'error')
     return render_template('admin/login.html')
 

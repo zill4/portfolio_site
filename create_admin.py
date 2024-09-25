@@ -9,7 +9,7 @@ def create_admin_user(username, email, password):
             user = User.query.filter_by(username=username).first()
             if user is None:
                 user = User(username=username, email=email)
-                user.password_hash = generate_password_hash(password, method='sha256')
+                user.password_hash = generate_password_hash(password, method='pbkdf2:sha256')
                 db.session.add(user)
                 db.session.commit()
                 print("\n" + "="*50)
