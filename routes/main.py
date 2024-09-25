@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_mail import Message
-from models import BlogPost
+from models import BlogPost, Project
 from main import app, mail
+from sqlalchemy import or_
 
 main_bp = Blueprint('main', __name__)
 
@@ -35,3 +36,21 @@ def contact():
         return redirect(url_for('main.contact'))
     
     return render_template('contact.html')
+
+@main_bp.route('/search')
+def search():
+    query = request.args.get('q')
+    if query:
+        blog_results = BlogPost.query.filter(or_(
+            BlogPost.title.ilike(f'%{query}%'),
+            BlogPost.content.ilike(f'%{query}%')
+        )).all()
+        project_results = Project.query.filter(or_(
+            Project.title.ilike(f'%{query}%'),
+            Project.description.ilike(f'%{query}%')
+        )).all()
+    else:
+        blog_results = []
+        project_results = []
+    
+    return render_template('search_results.html', query=query, blog_results=blog_results, project_results=project_results)

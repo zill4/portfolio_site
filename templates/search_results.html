@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results | Portfolio{% endblock %}
+
+{% block content %}
+<h1>Search Results for "{{ query }}"</h1>
+
+<h2>Blog Posts</h2>
+{% if blog_results %}
+    <ul>
+    {% for post in blog_results %}
+        <li>
+            <a href="{{ url_for('blog.blog_post', post_id=post.id) }}">{{ post.title }}</a>
+            <p>{{ post.content[:200] }}{% if post.content|length > 200 %}...{% endif %}</p>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No blog posts found.</p>
+{% endif %}
+
+<h2>Projects</h2>
+{% if project_results %}
+    <ul>
+    {% for project in project_results %}
+        <li>
+            <a href="{{ url_for('projects.project_detail', project_id=project.id) }}">{{ project.title }}</a>
+            <p>{{ project.description[:200] }}{% if project.description|length > 200 %}...{% endif %}</p>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No projects found.</p>
+{% endif %}
+
+{% if not blog_results and not project_results %}
+    <p>No results found for your search query.</p>
+{% endif %}
+
+{% endblock %}
