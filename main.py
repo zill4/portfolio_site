@@ -30,10 +30,20 @@ app.register_blueprint(admin_bp, url_prefix='/admin')
 def create_tables():
     try:
         with app.app_context():
-            db.create_all()
-            logger.info("Database tables created successfully")
+            inspector = db.inspect(db.engine)
+            if not inspector.has_table("blog_post"):
+                db.create_all()
+                logger.info("Database tables created successfully")
+            else:
+                # Check if author_id column exists in blog_post table
+                columns = inspector.get_columns("blog_post")
+                if "author_id" not in [col['name'] for col in columns]:
+                    # Add author_id column if it doesn't exist
+                    with db.engine.connect() as conn:
+                        conn.execute(db.text("ALTER TABLE blog_post ADD COLUMN author_id INTEGER"))
+                    logger.info("Added author_id column to blog_post table")
     except Exception as e:
-        logger.error(f"Error creating database tables: {str(e)}")
+        logger.error(f"Error managing database tables: {str(e)}")
 
 if __name__ == "__main__":
     create_tables()
