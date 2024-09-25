@@ -2,7 +2,8 @@
     --bg-color: #121212;
     --text-color: #ffffff;
     --accent-color: #bb86fc;
-    --secondary-color: #03dac6;
+    --secondary-color: #808080;
+    --tertiary-color: #ffffff;
 }
 
 body {
@@ -36,7 +37,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: var(--text-color);
+    color: var(--tertiary-color);
     text-decoration: none;
 }
 
