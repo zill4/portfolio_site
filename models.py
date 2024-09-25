@@ -14,7 +14,7 @@ class BlogPost(db.Model):
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     author = db.relationship('User', backref=db.backref('posts', lazy=True))
 
 class Project(db.Model):
