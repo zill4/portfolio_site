@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash
 from models import db, BlogPost, User
+import logging
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -10,17 +11,12 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        print(f"Debug: Submitted username: {username}")  # Debug info
-        print(f"Debug: Submitted password: {password}")  # Debug info (remove in production)
         user = User.query.filter_by(username=username).first()
-        print(f"Debug: User exists: {user is not None}")  # Debug info
-        if user:
-            password_check = check_password_hash(user.password_hash, password)
-            print(f"Debug: Password check passed: {password_check}")  # Debug info
-            if password_check:
-                login_user(user)
-                return redirect(url_for('admin.dashboard'))
+        if user and user.check_password(password):
+            login_user(user)
+            return redirect(url_for('admin.dashboard'))
         flash('Invalid username or password', 'error')
+        logging.error(f"Login failed for user {username}. User exists: {user is not None}")
     return render_template('admin/login.html')
 
 @admin_bp.route('/logout')
@@ -41,7 +37,7 @@ def new_post():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        new_post = BlogPost(title=title, content=content)
+        new_post = BlogPost(title=title, content=content, author=current_user)
         db.session.add(new_post)
         db.session.commit()
         flash('New post created successfully!', 'success')

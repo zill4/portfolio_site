@@ -1,12 +1,16 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, current_app as app
 from models import db, BlogPost
 
 blog_bp = Blueprint('blog', __name__)
 
 @blog_bp.route('/')
 def blog():
-    posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
-    return render_template('blog.html', posts=posts)
+    try:
+        posts = BlogPost.query.order_by(BlogPost.date_posted.desc()).all()
+        return render_template('blog.html', posts=posts)
+    except Exception as e:
+        app.logger.error(f"Error fetching blog posts: {str(e)}")
+        return "An error occurred while fetching blog posts", 500
 
 @blog_bp.route('/<int:post_id>')
 def blog_post(post_id):
