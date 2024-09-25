@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, redirect, url_for, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required, current_user
 from models import db, BlogPost
 import logging
 
@@ -20,17 +21,19 @@ def blog_post(post_id):
     return render_template('blog_post.html', post=post)
 
 @blog_bp.route('/new', methods=['GET', 'POST'])
+@login_required
 def new_post():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
-        new_post = BlogPost(title=title, content=content)
+        new_post = BlogPost(title=title, content=content, author=current_user)
         try:
             db.session.add(new_post)
             db.session.commit()
-            logger.info(f"New blog post created: {title}")
+            flash('New blog post created successfully!', 'success')
             return redirect(url_for('blog.blog'))
         except Exception as e:
             logger.error(f"Error creating new blog post: {str(e)}")
-            return "An error occurred while creating the blog post", 500
-    return render_template('blog_post.html')
+            flash('An error occurred while creating the blog post', 'error')
+            return render_template('blog_post.html')
+    return render_template('admin/post_form.html')
