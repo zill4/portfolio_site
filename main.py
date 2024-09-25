@@ -3,10 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import Config
 from models import db, User, BlogPost, Project
+import logging
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -24,11 +28,14 @@ app.register_blueprint(projects_bp, url_prefix='/projects')
 app.register_blueprint(admin_bp, url_prefix='/admin')
 
 def create_tables():
-    with app.app_context():
-        db.create_all()
-        print("Database tables created successfully")
+    try:
+        with app.app_context():
+            db.create_all()
+            logger.info("Database tables created successfully")
+    except Exception as e:
+        logger.error(f"Error creating database tables: {str(e)}")
 
 if __name__ == "__main__":
     create_tables()
-    print("Tables created, starting the Flask app...")
+    logger.info("Starting the Flask app...")
     app.run(host="0.0.0.0", port=5000)
