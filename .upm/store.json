@@ -1,0 +1,1 @@
+{"version":2,"languages":{"python3-poetry":{"specfileHash":"9d66cb85016282f25bbd663c7dd44600","lockfileHash":"acdd109c906cd19a27f1b62c66f3b15f","guessedImports":["Flask","SQLAlchemy","psycopg2-binary","Werkzeug","Flask-Login","Flask-SQLAlchemy","Flask-Mail"],"guessedImportsHash":"6e1d84a10d31ad55b5fc6faf8e285777"}}}
