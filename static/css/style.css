@@ -1,7 +1,7 @@
 :root {
     --bg-color: #121212;
     --text-color: #ffffff;
-    --accent-color: #bb86fc;
+    --accent-color: #ffffff;
     --secondary-color: #808080;
     --tertiary-color: #ffffff;
 }
@@ -42,7 +42,7 @@ nav ul li a {
 }
 
 h1, h2, h3 {
-    color: var(--accent-color);
+    color: #e0e0e0;
 }
 
 a {
@@ -85,16 +85,18 @@ a {
 
 .btn {
     display: inline-block;
-    background-color: var(--accent-color);
-    color: var(--bg-color);
+    background-color: var(--bg-color);
+    color: var(--accent-color);
     padding: 10px 20px;
     border-radius: 5px;
     margin-top: 20px;
     transition: background-color 0.3s ease;
+    border: 1px solid var(--accent-color);
 }
 
 .btn:hover {
-    background-color: var(--secondary-color);
+    background-color: var(--accent-color);
+    color: var(--bg-color);
 }
 
 #about {
@@ -117,10 +119,13 @@ a {
 
 .btn-danger {
     background-color: #dc3545;
+    color: var(--text-color);
+    border: 1px solid #dc3545;
 }
 
 .btn-danger:hover {
     background-color: #c82333;
+    border-color: #c82333;
 }
 
 .pagination {
