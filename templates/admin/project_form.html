@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}{% if project %}Edit Project{% else %}New Project{% endif %} | Admin{% endblock %}
+
+{% block content %}
+<h1>{% if project %}Edit Project{% else %}New Project{% endif %}</h1>
+
+<form method="POST">
+    <div>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="{{ project.title if project else '' }}" required>
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="5" required>{{ project.description if project else '' }}</textarea>
+    </div>
+    <div>
+        <label for="github_link">GitHub Link:</label>
+        <input type="url" id="github_link" name="github_link" value="{{ project.github_link if project else '' }}" required>
+    </div>
+    <div>
+        <label for="live_link">Live Link:</label>
+        <input type="url" id="live_link" name="live_link" value="{{ project.live_link if project else '' }}">
+    </div>
+    <button type="submit" class="btn">{% if project %}Update{% else %}Create{% endif %} Project</button>
+</form>
+
+<a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: '#description',
+        plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+        toolbar_mode: 'floating',
+    });
+</script>
+{% endblock %}

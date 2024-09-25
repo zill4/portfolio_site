@@ -13,9 +13,8 @@
   {% endif %}
 {% endwith %}
 
-<a href="{{ url_for('admin.new_post') }}" class="btn">Create New Post</a>
-
 <h2>Blog Posts</h2>
+<a href="{{ url_for('admin.new_post') }}" class="btn">Create New Post</a>
 <table>
     <thead>
         <tr>
@@ -40,19 +39,56 @@
     </tbody>
 </table>
 
-{% if posts.has_prev %}
-<a href="{{ url_for('admin.dashboard', page=posts.prev_num) }}">&laquo; Previous</a>
-{% endif %}
-{% if posts.has_next %}
-<a href="{{ url_for('admin.dashboard', page=posts.next_num) }}">Next &raquo;</a>
-{% endif %}
-{% endblock %}
+<div class="pagination">
+    {% for page in posts.iter_pages() %}
+        {% if page %}
+            {% if page != posts.page %}
+                <a href="{{ url_for('admin.dashboard', posts_page=page, projects_page=projects.page) }}">{{ page }}</a>
+            {% else %}
+                <strong>{{ page }}</strong>
+            {% endif %}
+        {% else %}
+            <span class="ellipsis">…</span>
+        {% endif %}
+    {% endfor %}
+</div>
 
-{% block scripts %}
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-    tinymce.init({
-        selector: '#content'
-    });
-</script>
+<h2>Projects</h2>
+<a href="{{ url_for('admin.new_project') }}" class="btn">Create New Project</a>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects.items %}
+        <tr>
+            <td>{{ project.title }}</td>
+            <td>
+                <a href="{{ url_for('admin.edit_project', project_id=project.id) }}" class="btn btn-small">Edit</a>
+                <form action="{{ url_for('admin.delete_project', project_id=project.id) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this project?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+    {% for page in projects.iter_pages() %}
+        {% if page %}
+            {% if page != projects.page %}
+                <a href="{{ url_for('admin.dashboard', posts_page=posts.page, projects_page=page) }}">{{ page }}</a>
+            {% else %}
+                <strong>{{ page }}</strong>
+            {% endif %}
+        {% else %}
+            <span class="ellipsis">…</span>
+        {% endif %}
+    {% endfor %}
+</div>
+
 {% endblock %}
