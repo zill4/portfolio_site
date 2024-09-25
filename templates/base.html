@@ -16,6 +16,7 @@
                     <li><a href="{{ url_for('blog.blog') }}">Blog</a></li>
                     <li><a href="{{ url_for('projects.projects') }}">Projects</a></li>
                     <li><a href="{{ url_for('main.about') }}">About</a></li>
+                    <li><a href="{{ url_for('main.contact') }}">Contact</a></li>
                     {% if current_user.is_authenticated %}
                         <li><a href="{{ url_for('admin.dashboard') }}">Admin Dashboard</a></li>
                         <li><a href="{{ url_for('admin.logout') }}">Logout</a></li>

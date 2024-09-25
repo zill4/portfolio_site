@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_mail import Mail
 from config import Config
 from models import db, User, BlogPost, Project
 import logging
@@ -15,6 +16,8 @@ logger = logging.getLogger(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'admin.login'
+
+mail = Mail(app)
 
 @login_manager.user_loader
 def load_user(user_id):
