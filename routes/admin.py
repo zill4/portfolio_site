@@ -4,21 +4,29 @@ from werkzeug.security import check_password_hash
 from models import db, BlogPost, User, Project
 import logging
 from datetime import datetime
+from sqlalchemy.exc import OperationalError
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+logger = logging.getLogger(__name__)
 
 @admin_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and user.check_password(password):
-            login_user(user)
-            flash('Logged in successfully.', 'success')
-            return redirect(url_for('admin.dashboard'))
-        flash('Invalid username or password', 'error')
-        logging.error(f"Login failed for user {username}. User exists: {user is not None}")
+        try:
+            user = User.query.filter_by(username=username).first()
+            if user and user.check_password(password):
+                login_user(user)
+                flash('Logged in successfully.', 'success')
+                return redirect(url_for('admin.dashboard'))
+            flash('Invalid username or password', 'error')
+        except OperationalError as e:
+            logger.error(f"Database connection error: {str(e)}")
+            flash('A database error occurred. Please try again later.', 'error')
+        except Exception as e:
+            logger.error(f"Unexpected error during login: {str(e)}")
+            flash('An unexpected error occurred. Please try again later.', 'error')
     return render_template('admin/login.html')
 
 @admin_bp.route('/logout')

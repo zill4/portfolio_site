@@ -5,6 +5,8 @@ from flask_mail import Mail
 from config import Config
 from models import db, User
 import logging
+from sqlalchemy.exc import OperationalError
+from time import sleep
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -24,12 +26,21 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 def create_tables():
-    try:
-        with app.app_context():
-            db.create_all()
-            logger.info("Database tables created successfully")
-    except Exception as e:
-        logger.error(f"Error creating database tables: {str(e)}")
+    max_retries = 5
+    retry_count = 0
+    while retry_count < max_retries:
+        try:
+            with app.app_context():
+                db.create_all()
+                logger.info("Database tables created successfully")
+                break
+        except OperationalError as e:
+            retry_count += 1
+            logger.error(f"Error creating database tables (attempt {retry_count}/{max_retries}): {str(e)}")
+            if retry_count < max_retries:
+                sleep(5)  # Wait for 5 seconds before retrying
+            else:
+                logger.error("Max retries reached. Unable to create database tables.")
 
 def create_app():
     # Import blueprints
