@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} | Projects{% endblock %}
+
+{% block content %}
+<article class="project">
+    <h1>{{ project.title }}</h1>
+    <div class="description">
+        {{ project.description|safe }}
+    </div>
+    <div class="links">
+        <a href="{{ project.github_link }}" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+        {% if project.live_link %}
+        <a href="{{ project.live_link }}" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        {% endif %}
+    </div>
+</article>
+
+<a href="{{ url_for('projects.projects') }}" class="btn">Back to Projects</a>
+{% endblock %}
