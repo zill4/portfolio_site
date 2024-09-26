@@ -1,0 +1,6 @@
+.env
+.upm
+.pythonlibs
+.local
+.cache
+__pycache__
