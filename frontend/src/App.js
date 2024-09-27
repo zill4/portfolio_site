@@ -15,7 +15,12 @@ import './App.css';
 
 function App() {
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+      logout();
+      // You might want to navigate to the home page or login page after logout
+  };
 
   return (
     <ThemeProvider>
@@ -33,7 +38,7 @@ function App() {
               {currentUser ? (
                 <>
                 <li><a href="/dashboard ">Admin Dashboard</a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a onClick={handleLogout}>Logout</a></li>
                 </>
               )
               :

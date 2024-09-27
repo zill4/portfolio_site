@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase'; // Adjust the import path as needed
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { AuthContext } from '../contexts/authContext'; // Import AuthContext
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { setCurrentUser } = useContext(AuthContext); // Get setCurrentUser from AuthContext
 
     // const handleEmailLogin = async (e) => {
     //     e.preventDefault();
@@ -22,7 +24,10 @@ function Login() {
     const handleGoogleLogin = async () => {
         const provider = new GoogleAuthProvider();
         try {
-            await signInWithPopup(auth, provider);
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            console.log(user);
+            setCurrentUser(user); // Update the current user in AuthContext
             navigate('/dashboard'); // Redirect to dashboard after successful login
         } catch (error) {
             setError(error.message);
