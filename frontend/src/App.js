@@ -9,7 +9,9 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import CreateProject from './pages/CreateProject';
 import CreateBlogPost from './pages/CreateBlogPost';
+import BlogDetail from './pages/BlogDetail';
 import PrivateRoute from './components/privateRoute';
+import ProjectDetail from './pages/ProjectDetail';
 import { AuthContext } from './contexts/authContext';
 import { ThemeProvider } from './contexts/themeContext';
 import ThemeToggle from './components/themeToggle';
@@ -18,6 +20,7 @@ import './App.css';
 function App() {
 
   const { currentUser, logout } = useContext(AuthContext);
+  const isAdminSubdomain = window.location.hostname.startsWith('admin.');
 
   const handleLogout = () => {
     logout();
@@ -37,30 +40,36 @@ function App() {
                 <li><a href="/projects">Projects</a></li>
                 <li><a href="/about">About</a></li>
                 <li><a href="/contact">Contact</a></li>
-                {currentUser ? (
-                  <>
-                    <li><a href="/dashboard ">Admin Dashboard</a></li>
-                    <li><a onClick={handleLogout}>Logout</a></li>
+                {isAdminSubdomain && (
+                <>
+                  {currentUser ? (
+                    <>
+                      <li><a href="/dashboard ">Admin Dashboard</a></li>
+                      <li><a onClick={handleLogout}>Logout</a></li>
+                    </>
+                  )
+                    :
+                    <li><a href="/login">Admin</a></li>}
                   </>
-                )
-                  :
-                  <li><a href="/login">Admin</a></li>}
+                )}
                 <ThemeToggle />
               </ul>
             </nav>
-            <form action="{{ url_for('main.search') }}" method="GET" class="search-form">
+            {/* <form action="{{ url_for('main.search') }}" method="GET" class="search-form">
               <input type="text" name="q" placeholder="Search..." required />
               <button type="submit">Search</button>
-            </form>
+            </form> */}
           </div>
         </header>
 
         <main class="container">
           <Router>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/*" element={<Home />} />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogDetail />} />
               <Route path="/projects" element={<Projects />} />
+              <Route path="/project/:id" element={<ProjectDetail />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route
@@ -71,7 +80,7 @@ function App() {
                   </PrivateRoute>
                 }
               />
-              <Route path="/login" element={<Login />} />
+              {isAdminSubdomain && <Route path="/login" element={<Login />} />}
               <Route path="/create-project" element={
                 <PrivateRoute>
                 <CreateProject />

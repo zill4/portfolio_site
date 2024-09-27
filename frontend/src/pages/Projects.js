@@ -1,10 +1,94 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { collection, query, orderBy, limit, startAfter, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
+import ReactMarkdown from 'react-markdown';
+import '../styles/Projects.css';
 function Projects() {
+    const [projects, setProjects] = useState([]);
+    const [lastVisible, setLastVisible] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        fetchProjects();
+    }, []);
+
+    const fetchProjects = async () => {
+        setLoading(true);
+        try {
+            const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'), limit(5));
+            const querySnapshot = await getDocs(q);
+            const fetchedProjects = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setProjects(fetchedProjects);
+            setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        } catch (error) {
+            console.error("Error fetching projects: ", error);
+        }
+        setLoading(false);
+    };
+
+    const fetchMoreProjects = async () => {
+        if (!lastVisible) return;
+        setLoading(true);
+        try {
+            const q = query(collection(db, 'projects'), 
+                            orderBy('createdAt', 'desc'), 
+                            startAfter(lastVisible), 
+                            limit(5));
+            const querySnapshot = await getDocs(q);
+            const fetchedProjects = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setProjects([...projects, ...fetchedProjects]);
+            setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        } catch (error) {
+            console.error("Error fetching more projects: ", error);
+        }
+        setLoading(false);
+    };
+
     return (
-        <div class="project">
-            <h2><a href="{{ url_for('projects.project_detail', project_id=project.id) }}"> project.title </a></h2>
-            <p> project.description[:200]  if project.description|length  200 ...endif</p>
-            <a href="{{ project.github_link }}" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="{{ project.live_link }}" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <div className="projects">
+            <h1>My Projects</h1>
+            {projects.map(project => (
+                <div key={project.id} className="project">
+                    <h2>
+                        <Link to={`/project/${project.id}`}>{project.title}</Link>
+                    </h2>
+                    <ReactMarkdown>
+                        {project.description.length > 200 
+                            ? `${project.description.substring(0, 200)}...` 
+                            : project.description}
+                    </ReactMarkdown>
+                    <div className="project-links">
+                        <a href={project.repoLink} target="_blank" rel="noopener noreferrer">GitHub</a>
+                        {project.liveLink && (
+                            <a href={project.liveLink} target="_blank" rel="noopener noreferrer">Live Demo</a>
+                        )}
+                    </div>
+                    {project.mediaLink && (
+                        <div className="project-media">
+                            {project.mediaType === 'photo' ? (
+                                <img src={project.mediaLink} alt={project.title} />
+                            ) : (
+                                <video src={project.mediaLink} controls>
+                                    Your browser does not support the video tag.
+                                </video>
+                            )}
+                        </div>
+                    )}
+                </div>
+            ))}
+            {loading && <p>Loading...</p>}
+            {lastVisible && (
+                <button onClick={fetchMoreProjects} className="btn" disabled={loading}>
+                    Load More
+                </button>
+            )}
         </div>
     );
 }

@@ -1,11 +1,83 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { collection, query, orderBy, limit, startAfter, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { db } from '../firebase';
+import '../styles/Dashboard.css';
 function Dashboard() {
+    const [posts, setPosts] = useState([]);
+    const [projects, setProjects] = useState([]);
+    const [lastPostVisible, setLastPostVisible] = useState(null);
+    const [lastProjectVisible, setLastProjectVisible] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        fetchPosts();
+        fetchProjects();
+    }, []);
+
+    const fetchPosts = async () => {
+        setLoading(true);
+        try {
+            const q = query(collection(db, 'blogPosts'), orderBy('createdAt', 'desc'), limit(10));
+            const querySnapshot = await getDocs(q);
+            const fetchedPosts = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setPosts(fetchedPosts);
+            setLastPostVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        } catch (error) {
+            console.error("Error fetching posts: ", error);
+        }
+        setLoading(false);
+    };
+
+    const fetchProjects = async () => {
+        setLoading(true);
+        try {
+            const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'), limit(10));
+            const querySnapshot = await getDocs(q);
+            const fetchedProjects = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setProjects(fetchedProjects);
+            setLastProjectVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        } catch (error) {
+            console.error("Error fetching projects: ", error);
+        }
+        setLoading(false);
+    };
+
+    const deletePost = async (postId) => {
+        if (window.confirm('Are you sure you want to delete this post?')) {
+            try {
+                await deleteDoc(doc(db, 'blogPosts', postId));
+                setPosts(posts.filter(post => post.id !== postId));
+            } catch (error) {
+                console.error("Error deleting post: ", error);
+            }
+        }
+    };
+
+    const deleteProject = async (projectId) => {
+        if (window.confirm('Are you sure you want to delete this project?')) {
+            try {
+                await deleteDoc(doc(db, 'projects', projectId));
+                setProjects(projects.filter(project => project.id !== projectId));
+            } catch (error) {
+                console.error("Error deleting project: ", error);
+            }
+        }
+    };
+
     return (
-        <div>
+        <div className="dashboard">
             <h1>Admin Dashboard</h1>
-            <div class="alert alert-{{ category }}"> message </div>
+            
             <section id="blog-posts">
                 <h2>Blog Posts</h2>
-                <a href="/create-blog-post" class="btn">Create New Post</a>
+                <Link to="/create-blog-post" className="btn">Create New Post</Link>
                 <table>
                     <thead>
                         <tr>
@@ -15,28 +87,23 @@ function Dashboard() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td> post.title </td>
-                            <td>post.date_posted.strftime('%Y-%m-%d %H:%M')</td>
-                            <td>
-                                <a href="{{ url_for('admin.edit_post', post_id=post.id) }}" class="btn btn-small">Edit</a>
-                                <form action="{{ url_for('admin.delete_post', post_id=post.id) }}" method="POST" style={{display: "inline"}}>
-                                    <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
+                        {posts.map(post => (
+                            <tr key={post.id}>
+                                <td>{post.title}</td>
+                                <td>{new Date(post.createdAt).toLocaleString()}</td>
+                                <td>
+                                    <Link to={`/edit-post/${post.id}`} className="btn btn-small">Edit</Link>
+                                    <button onClick={() => deletePost(post.id)} className="btn btn-small btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
-
-                <div class="pagination">
-                    <a href="{{ url_for('admin.dashboard', posts_page=page, projects_page=projects.page) }}"> page </a>
-                    <strong>page </strong>
-                    <span class="ellipsis">…</span>
-                </div>
             </section>
+
             <section id="projects">
                 <h2>Projects</h2>
-                <a href="/create-project" class="btn">Create New Project</a>
+                <Link to="/create-project" className="btn">Create New Project</Link>
                 <table>
                     <thead>
                         <tr>
@@ -45,24 +112,20 @@ function Dashboard() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>project.title </td>
-                            <td>
-                                <a href="{{ url_for('admin.edit_project', project_id=project.id) }}" class="btn btn-small">Edit</a>
-                                <form action="{{ url_for('admin.delete_project', project_id=project.id) }}" method="POST" style={{display: "inline"}}>
-                                    <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this project?')">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
+                        {projects.map(project => (
+                            <tr key={project.id}>
+                                <td>{project.title}</td>
+                                <td>
+                                    <Link to={`/edit-project/${project.id}`} className="btn btn-small">Edit</Link>
+                                    <button onClick={() => deleteProject(project.id)} className="btn btn-small btn-danger">Delete</button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
-                <div class="pagination">
-                    <a href="{{ url_for('admin.dashboard', posts_page=posts.page, projects_page=page) }}"> page </a>
-                    <strong> page </strong>
-                    <span class="ellipsis">…</span>
-
-                </div>
             </section>
+
+            {loading && <p>Loading...</p>}
         </div>
     );
 }

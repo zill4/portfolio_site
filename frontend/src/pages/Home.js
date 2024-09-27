@@ -1,6 +1,43 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 
 function Home() {
+    const [recentPosts, setRecentPosts] = useState([]);
+    const [featuredProjects, setFeaturedProjects] = useState([]);
+    useEffect(() => {
+        fetchRecentPosts();
+        fetchFeaturedProjects();
+    }, []);
+
+    const fetchRecentPosts = async () => {
+        try {
+            const q = query(collection(db, 'blogPosts'), orderBy('createdAt', 'desc'), limit(3));
+            const querySnapshot = await getDocs(q);
+            const posts = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setRecentPosts(posts);
+        } catch (error) {
+            console.error("Error fetching recent posts: ", error);
+        }
+    };
+
+    const fetchFeaturedProjects = async () => {
+        try {
+            const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'), limit(3));
+            const querySnapshot = await getDocs(q);
+            const projects = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setFeaturedProjects(projects);
+        } catch (error) {
+            console.error("Error fetching featured projects: ", error);
+        }
+    };
 
     return (
         <div>
@@ -11,12 +48,14 @@ function Home() {
 
             <section id="recent-posts">
                 <h2>Recent Blog Posts</h2>
-                <article class="blog-post">
-                    <h3><a href="{{ url_for('blog.blog_post', post_id=post.id) }}">post.title here</a></h3>
-                    <p class="date">post.date_posted.strftime('%Y-%m-%d')</p>
-                    <a href="{{ url_for('blog.blog_post', post_id=post.id) }}">Read more</a>
-                </article>
-                <a href="{{ url_for('blog.blog') }}" class="btn">View All Blog Posts</a>
+                {recentPosts.map(post => (
+                    <article key={post.id} className="blog-post">
+                        <h3><Link to={`/blog/${post.id}`}>{post.title}</Link></h3>
+                        <p className="date">{new Date(post.createdAt).toLocaleDateString()}</p>
+                        <Link to={`/blog/${post.id}`}>Read more</Link>
+                    </article>
+                ))}
+                <Link to="/blog" className="btn">View All Blog Posts</Link>
             </section>
 
             <section id="about">
@@ -26,16 +65,22 @@ function Home() {
 
             <section id="projects">
                 <h2>Featured Projects</h2>
-                {/* <!-- Add a few featured projects here --> */}
-                <a href="{{ url_for('projects.projects') }}" class="btn">View All Projects</a>
+                {featuredProjects.map(project => (
+                    <div key={project.id} className="project">
+                        <h3><Link to={`/project/${project.id}`}>{project.title}</Link></h3>
+                        <p>{project.description.substring(0, 100)}...</p>
+                        <Link to={`/project/${project.id}`} className="btn">View Project</Link>
+                    </div>
+                ))}
+                <Link to="/projects" className="btn">View All Projects</Link>
             </section>
 
             <section id="links">
                 <h2>Important Links</h2>
                 <ul>
-                    <li><a href="https://github.com/yourusername" target="_blank">GitHub</a></li>
-                    <li><a href="https://linkedin.com/in/yourusername" target="_blank">LinkedIn</a></li>
-                    <li><a href="{{ url_for('blog.blog') }}">Blog</a></li>
+                    <li><a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                    <li><a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+                    <li><Link to="/blog">Blog</Link></li>
                 </ul>
             </section>
         </div>
