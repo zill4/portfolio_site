@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Blog from './pages/Blog';
@@ -7,10 +7,18 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
+import PrivateRoute from './components/privateRoute';
+import { AuthContext } from './contexts/authContext';
+import { ThemeProvider } from './contexts/themeContext';
+import ThemeToggle from './components/themeToggle';
 import './App.css';
 
 function App() {
+
+  const { currentUser } = useContext(AuthContext);
+
   return (
+    <ThemeProvider>
     <div className="App">
 
       <header>
@@ -22,13 +30,15 @@ function App() {
               <li><a href="/projects">Projects</a></li>
               <li><a href="/about">About</a></li>
               <li><a href="/contact">Contact</a></li>
-              {/* {% if current_user.is_authenticated %} */}
-              <li><a href="/dashboard ">Admin Dashboard</a></li>
-              {/* this can just be a function */}
-              <li><a href="/logout">Logout</a></li>
-              {/* {% else %} */}
-              <li><a href="/login">Admin Login</a></li>
-              {/* {% endif %} */}
+              {currentUser ? (
+                <>
+                <li><a href="/dashboard ">Admin Dashboard</a></li>
+                <li><a href="/logout">Logout</a></li>
+                </>
+              )
+              :
+              <li><a href="/login">Admin</a></li>}
+              <ThemeToggle />
             </ul>
           </nav>
           <form action="{{ url_for('main.search') }}" method="GET" class="search-form">
@@ -46,18 +56,27 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/dashboard"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
             <Route path="/login" element={<Login />} />
           </Routes>
-        </Router>            </main>
+        </Router>
+      </main>
 
-      <footer>
+      {/* <footer>
         <div class="container">
-          <p>&copy; 2023 Portfolio. All rights reserved.</p>
+          <p>&copy; 2024 crispcode.io All rights reserved.</p>
         </div>
-      </footer>
+      </footer> */}
 
     </div>
+    </ThemeProvider>
   );
 }
 

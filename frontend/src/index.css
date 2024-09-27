@@ -1,9 +1,9 @@
 :root {
-  --bg-color: #121212;
-  --text-color: #ffffff;
-  --accent-color: #ffffff;
-  --secondary-color: #808080;
-  --tertiary-color: #ffffff;
+  --bg-color: #ffffff;           /* Light background */
+  --text-color: #000000;         /* Dark text */
+  --accent-color: #007bff;       /* Blue accent color */
+  --secondary-color: #6c757d;    /* Gray for secondary text */
+  --tertiary-color: #343a40;     /* Darker color for headings and nav links */
 }
 
 body {
@@ -14,7 +14,67 @@ body {
   margin: 0;
   padding: 0;
 }
+body.dark-mode {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --accent-color: #4da3ff;
+  --secondary-color: #a0a0a0;
+  --tertiary-color: #e0e0e0;
+}
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+}
 
+/* Add these new styles for dark mode */
+body.dark-mode {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+body.dark-mode header {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode #recent-posts,
+body.dark-mode #about,
+body.dark-mode #projects,
+body.dark-mode #links {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .blog-post {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+body.dark-mode .btn {
+  background-color: var(--accent-color);
+  color: var(--bg-color);
+}
+
+body.dark-mode .btn:hover {
+  background-color: var(--bg-color);
+  color: var(--accent-color);
+}
+
+body.dark-mode .search-form input[type='text'] {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border-color: var(--accent-color);
+}
+
+body.dark-mode .search-form button {
+  background-color: var(--accent-color);
+  color: var(--bg-color);
+}
+
+body.dark-mode .search-form button:hover {
+  background-color: var(--bg-color);
+  color: var(--accent-color);
+}
 .container {
   width: 80%;
   margin: 0 auto;
@@ -22,7 +82,7 @@ body {
 }
 
 header {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.8); /* Light background with slight opacity */
   padding: 20px 0;
 }
 
@@ -42,11 +102,11 @@ nav ul li a {
 }
 
 h1, h2, h3 {
-  color: #e0e0e0;
+  color: var(--tertiary-color);
 }
 
 a {
-  color: var(--secondary-color);
+  color: var(--accent-color);
   text-decoration: none;
 }
 
@@ -56,14 +116,14 @@ a {
 }
 
 #recent-posts, #about, #projects, #links {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.05); /* Light gray background */
   padding: 40px;
   margin-bottom: 40px;
   border-radius: 10px;
 }
 
 .blog-post {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.03); /* Even lighter gray */
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 5px;
@@ -101,7 +161,7 @@ a {
 
 @media (max-width: 768px) {
   .container {
-      width: 95%;
+    width: 95%;
   }
 }
 
@@ -115,7 +175,7 @@ a {
 
 .btn-danger {
   background-color: #dc3545;
-  color: var(--text-color);
+  color: var(--bg-color);
   border: 1px solid #dc3545;
 }
 
@@ -129,7 +189,8 @@ a {
   text-align: center;
 }
 
-.pagination a, .pagination span {
+.pagination a,
+.pagination span {
   padding: 5px 10px;
   margin: 0 5px;
   border: 1px solid var(--accent-color);
@@ -168,7 +229,8 @@ a {
   min-height: calc(100vh - 100px);
 }
 
-.about-image, .about-content {
+.about-image,
+.about-content {
   flex: 1;
   padding: 40px;
 }
@@ -182,17 +244,18 @@ a {
 }
 
 .about-content {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.05); /* Light gray background */
   border-radius: 10px;
 }
 
 @media (max-width: 768px) {
   .about-container {
-      flex-direction: column;
+    flex-direction: column;
   }
 
-  .about-image, .about-content {
-      width: 100%;
+  .about-image,
+  .about-content {
+    width: 100%;
   }
 }
 
@@ -202,7 +265,7 @@ a {
   margin-top: 10px;
 }
 
-.search-form input[type="text"] {
+.search-form input[type='text'] {
   padding: 5px 10px;
   border: 1px solid var(--accent-color);
   border-radius: 5px 0 0 5px;

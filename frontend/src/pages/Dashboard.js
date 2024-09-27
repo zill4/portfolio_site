@@ -20,7 +20,7 @@ function Dashboard() {
                             <td>post.date_posted.strftime('%Y-%m-%d %H:%M')</td>
                             <td>
                                 <a href="{{ url_for('admin.edit_post', post_id=post.id) }}" class="btn btn-small">Edit</a>
-                                <form action="{{ url_for('admin.delete_post', post_id=post.id) }}" method="POST" style="display: inline;">
+                                <form action="{{ url_for('admin.delete_post', post_id=post.id) }}" method="POST" style={{display: "inline"}}>
                                     <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete</button>
                                 </form>
                             </td>
@@ -49,7 +49,7 @@ function Dashboard() {
                             <td>project.title </td>
                             <td>
                                 <a href="{{ url_for('admin.edit_project', project_id=project.id) }}" class="btn btn-small">Edit</a>
-                                <form action="{{ url_for('admin.delete_project', project_id=project.id) }}" method="POST" style="display: inline;">
+                                <form action="{{ url_for('admin.delete_project', project_id=project.id) }}" method="POST" style={{display: "inline"}}>
                                     <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Are you sure you want to delete this project?')">Delete</button>
                                 </form>
                             </td>
