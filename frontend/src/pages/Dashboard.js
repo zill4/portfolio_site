@@ -5,7 +5,7 @@ function Dashboard() {
             <div class="alert alert-{{ category }}"> message </div>
             <section id="blog-posts">
                 <h2>Blog Posts</h2>
-                <a href="{{ url_for('admin.new_post') }}" class="btn">Create New Post</a>
+                <a href="/create-blog-post" class="btn">Create New Post</a>
                 <table>
                     <thead>
                         <tr>
@@ -36,7 +36,7 @@ function Dashboard() {
             </section>
             <section id="projects">
                 <h2>Projects</h2>
-                <a href="{{ url_for('admin.new_project') }}" class="btn">Create New Project</a>
+                <a href="/create-project" class="btn">Create New Project</a>
                 <table>
                     <thead>
                         <tr>
