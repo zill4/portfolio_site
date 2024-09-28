@@ -8,6 +8,8 @@ function Projects() {
     const [projects, setProjects] = useState([]);
     const [lastVisible, setLastVisible] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const postsPerPage = 5;
 
     useEffect(() => {
         fetchProjects();
@@ -16,7 +18,7 @@ function Projects() {
     const fetchProjects = async () => {
         setLoading(true);
         try {
-            const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'), limit(5));
+            const q = query(collection(db, 'projects'), orderBy('createdAt', 'desc'), limit(postsPerPage));
             const querySnapshot = await getDocs(q);
             const fetchedProjects = querySnapshot.docs.map(doc => ({
                 id: doc.id,
@@ -24,6 +26,7 @@ function Projects() {
             }));
             setProjects(fetchedProjects);
             setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+            setHasMore(querySnapshot.docs.length === postsPerPage);
         } catch (error) {
             console.error("Error fetching projects: ", error);
         }
@@ -37,7 +40,7 @@ function Projects() {
             const q = query(collection(db, 'projects'), 
                             orderBy('createdAt', 'desc'), 
                             startAfter(lastVisible), 
-                            limit(5));
+                            limit(postsPerPage));
             const querySnapshot = await getDocs(q);
             const fetchedProjects = querySnapshot.docs.map(doc => ({
                 id: doc.id,
@@ -84,7 +87,7 @@ function Projects() {
                 </div>
             ))}
             {loading && <p>Loading...</p>}
-            {lastVisible && (
+            {hasMore && (
                 <button onClick={fetchMoreProjects} className="btn" disabled={loading}>
                     Load More
                 </button>

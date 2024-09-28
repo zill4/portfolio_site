@@ -7,6 +7,7 @@ function Blog() {
     const [posts, setPosts] = useState([]);
     const [lastVisible, setLastVisible] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
 
     const postsPerPage = 5; // Adjust as needed
 
@@ -25,6 +26,7 @@ function Blog() {
             }));
             setPosts(fetchedPosts);
             setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+            setHasMore(querySnapshot.docs.length === postsPerPage);
         } catch (error) {
             console.error("Error fetching posts: ", error);
         }
@@ -32,7 +34,7 @@ function Blog() {
     };
 
     const fetchMorePosts = async () => {
-        if (!lastVisible) return;
+        if (!lastVisible || !hasMore) return;
         setLoading(true);
         try {
             const q = query(collection(db, 'blogPosts'), 
@@ -46,6 +48,7 @@ function Blog() {
             }));
             setPosts([...posts, ...fetchedPosts]);
             setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+            setHasMore(querySnapshot.docs.length === postsPerPage);
         } catch (error) {
             console.error("Error fetching more posts: ", error);
         }
@@ -55,9 +58,7 @@ function Blog() {
     return (
         <div className="blog">
             <h1>Blog Posts</h1>
-            <Link to="/create-blog-post" className="btn">New Post</Link>
-            <Link to="/login" className="btn">Admin Login</Link>
-            
+
             {posts.map(post => (
                 <article key={post.id} className="blog-post">
                     <h2><Link to={`/blog/${post.id}`}>{post.title}</Link></h2>
@@ -69,11 +70,13 @@ function Blog() {
 
             {loading && <p>Loading...</p>}
             
-            {lastVisible && (
-                <button onClick={fetchMorePosts} className="btn" disabled={loading}>
+            {hasMore && !loading && (
+                <button onClick={fetchMorePosts} className="btn">
                     Load More
                 </button>
             )}
+
+
         </div>
     );
 }

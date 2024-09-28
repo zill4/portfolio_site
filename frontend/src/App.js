@@ -15,6 +15,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import { AuthContext } from './contexts/authContext';
 import { ThemeProvider } from './contexts/themeContext';
 import ThemeToggle from './components/themeToggle';
+import { Link } from 'react-router-dom';
 import './App.css';
 
 function App() {
@@ -29,27 +30,28 @@ function App() {
 
   return (
     <ThemeProvider>
+      <Router>
       <div className="App">
 
         <header>
           <div class="container">
             <nav>
               <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/blog">Blog</a></li>
-                <li><a href="/projects">Projects</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
+              <li><Link to="/" >Home</Link></li>
+              <li><Link to="/blog" >Blog</Link></li>
+                <li><Link to="/projects" >Projects</Link></li>
+                <li><Link to="/about" >About</Link></li>
+                {/* <li><a href="/contact">Contact</a></li> */}
                 {isAdminSubdomain && (
                 <>
                   {currentUser ? (
                     <>
-                      <li><a href="/dashboard ">Admin Dashboard</a></li>
+                      <li><Link to="/dashboard " >Admin Dashboard</Link></li>
                       <li><a onClick={handleLogout}>Logout</a></li>
                     </>
                   )
                     :
-                    <li><a href="/login">Admin</a></li>}
+                    <li><Link to="/login" >Admin</Link></li>}
                   </>
                 )}
                 <ThemeToggle />
@@ -63,7 +65,6 @@ function App() {
         </header>
 
         <main class="container">
-          <Router>
             <Routes>
               <Route path="/*" element={<Home />} />
               <Route path="/blog" element={<Blog />} />
@@ -71,7 +72,7 @@ function App() {
               <Route path="/projects" element={<Projects />} />
               <Route path="/project/:id" element={<ProjectDetail />} />
               <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
+              {/* <Route path="/contact" element={<Contact />} /> */}
               <Route
                 path="/dashboard"
                 element={
@@ -93,16 +94,16 @@ function App() {
               </PrivateRoute>
               } />
             </Routes>
-          </Router>
         </main>
 
         {/* <footer>
         <div class="container">
-          <p>&copy; 2024 crispcode.io All rights reserved.</p>
+        <p>&copy; 2024 crispcode.io All rights reserved.</p>
         </div>
-      </footer> */}
+        </footer> */}
 
       </div>
+        </Router>
     </ThemeProvider>
   );
 }
