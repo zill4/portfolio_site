@@ -40,6 +40,7 @@ function Login() {
 
             <div className="google-signin">
                 <button onClick={handleGoogleLogin}>Sign in if your name is Justin</button>
+                <p>yeah... this looks like shit, I'll fix it after I work on something more interesting</p>
             </div>
         </div>
     );

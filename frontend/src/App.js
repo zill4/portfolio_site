@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Blog from './pages/Blog';
 import Projects from './pages/Projects';
@@ -18,7 +18,6 @@ import './App.css';
 
 function App() {
   const { currentUser, logout } = useContext(AuthContext);
-  const isAdminSubdomain = window.location.hostname.startsWith('admin.');
 
   const handleLogout = () => {
     logout();
@@ -27,7 +26,7 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-      <div className="App">
+        <div className="App">
           <header className="header">
             <div className="container header-content">
               <div className="logo">
@@ -39,17 +38,13 @@ function App() {
                   <li><Link to="/blog">Blog</Link></li>
                   <li><Link to="/projects">Projects</Link></li>
                   <li><Link to="/about">About</Link></li>
-                  {isAdminSubdomain && (
+                  {currentUser ? (
                     <>
-                      {currentUser ? (
-                        <>
-                          <li><Link to="/dashboard">Admin Dashboard</Link></li>
-                          <li><button onClick={handleLogout} className="logout-btn">Logout</button></li>
-                        </>
-                      ) : (
-                        <li><Link to="/login">Admin</Link></li>
-                      )}
+                      <li><Link to="/admin/dashboard">Admin Dashboard</Link></li>
+                      <li><button onClick={handleLogout} className="logout-btn">Logout</button></li>
                     </>
+                  ) : (
+                    <li><Link to="/admin/login">Admin</Link></li>
                   )}
                   <li><ThemeToggle /></li>
                 </ul>
@@ -59,31 +54,32 @@ function App() {
 
           <main className="main-content">
             <Routes>
-              <Route path="/*" element={<Home />} />
+              <Route path="/" element={<Home />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogDetail />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/project/:id" element={<ProjectDetail />} />
               <Route path="/about" element={<About />} />
+              <Route path="/admin/login" element={<Login />} />
               <Route
-                path="/dashboard"
+                path="/admin/dashboard"
                 element={
                   <PrivateRoute>
                     <Dashboard />
                   </PrivateRoute>
                 }
               />
-              {isAdminSubdomain && <Route path="/login" element={<Login />} />}
-              <Route path="/create-project" element={
+              <Route path="/admin/create-project" element={
                 <PrivateRoute>
                   <CreateProject />
                 </PrivateRoute>
               } />
-              <Route path="/create-blog-post" element={
+              <Route path="/admin/create-blog-post" element={
                 <PrivateRoute>
                   <CreateBlogPost />
                 </PrivateRoute>
               } />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
 
