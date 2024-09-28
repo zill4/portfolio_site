@@ -43,7 +43,8 @@ function Home() {
         <div className="home container">
             <section className="hero section">
                 <h1>Welcome to crispcode.io</h1>
-                <p>I'm a software developer passionate about building web applications and learning new technologies.</p>
+                <p>Work in progress, check back soon.</p>
+                <p>Contact me at <a href="mailto:justin@crispcode.io">Justin@crispcode.io</a></p>
             </section>
 
             <section className="featured-posts section">
@@ -73,10 +74,10 @@ function Home() {
             </section>
 
             <section className="important-links section">
-                <h2>Important Links</h2>
+                <h2>Links</h2>
                 <ul>
-                    <li><a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-                    <li><a href="https://linkedin.com/in/yourusername" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+                    <li><a href="https://github.com/zill4" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                    <li><a href="https://linkedin.com/in/justcrisp" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
                     <li><Link to="/blog">Blog</Link></li>
                 </ul>
             </section>
