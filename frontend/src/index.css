@@ -1,7 +1,6 @@
 :root {
   --bg-color: #ffffff;           /* Light background */
   --text-color: #000000;         /* Dark text */
-  --accent-color: #007bff;       /* Blue accent color */
   --secondary-color: #6c757d;    /* Gray for secondary text */
   --tertiary-color: #343a40;     /* Darker color for headings and nav links */
 }
@@ -17,7 +16,6 @@ body {
 body.dark-mode {
   --bg-color: #121212;
   --text-color: #ffffff;
-  --accent-color: #4da3ff;
   --secondary-color: #a0a0a0;
   --tertiary-color: #e0e0e0;
 }

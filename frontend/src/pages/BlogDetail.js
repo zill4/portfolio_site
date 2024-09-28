@@ -4,7 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import ReactMarkdown from 'react-markdown';
 import '../styles/BlogDetail.css';
-
+import { Timestamp } from 'firebase/firestore';
 function BlogDetail() {
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -42,7 +42,7 @@ function BlogDetail() {
             <h1>{post.title}</h1>
             <div className="blog-meta">
                 <span className="author">By {post.authorName}</span>
-                <span className="date">Published on {new Date(post.createdAt).toLocaleDateString()}</span>
+                <span className="date">Published on {new Timestamp(post.createdAt.seconds, post.createdAt.nanoseconds).toDate().toLocaleDateString()}</span>
             </div>
             <div className="blog-content">
                 <ReactMarkdown>{post.content}</ReactMarkdown>

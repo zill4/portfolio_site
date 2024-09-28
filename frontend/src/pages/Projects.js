@@ -4,6 +4,7 @@ import { collection, query, orderBy, limit, startAfter, getDocs } from 'firebase
 import { db } from '../firebase';
 import ReactMarkdown from 'react-markdown';
 import '../styles/Projects.css';
+
 function Projects() {
     const [projects, setProjects] = useState([]);
     const [lastVisible, setLastVisible] = useState(null);
@@ -34,7 +35,7 @@ function Projects() {
     };
 
     const fetchMoreProjects = async () => {
-        if (!lastVisible) return;
+        if (!lastVisible || !hasMore) return;
         setLoading(true);
         try {
             const q = query(collection(db, 'projects'), 
@@ -48,6 +49,7 @@ function Projects() {
             }));
             setProjects([...projects, ...fetchedProjects]);
             setLastVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+            setHasMore(querySnapshot.docs.length === postsPerPage);
         } catch (error) {
             console.error("Error fetching more projects: ", error);
         }
@@ -55,10 +57,10 @@ function Projects() {
     };
 
     return (
-        <div className="projects">
+        <div className="projects container">
             <h1>My Projects</h1>
             {projects.map(project => (
-                <div key={project.id} className="project">
+                <article key={project.id} className="project section">
                     <h2>
                         <Link to={`/project/${project.id}`}>{project.title}</Link>
                     </h2>
@@ -68,9 +70,9 @@ function Projects() {
                             : project.description}
                     </ReactMarkdown>
                     <div className="project-links">
-                        <a href={project.repoLink} target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <a href={project.repoLink} target="_blank" rel="noopener noreferrer" className="btn">GitHub</a>
                         {project.liveLink && (
-                            <a href={project.liveLink} target="_blank" rel="noopener noreferrer">Live Demo</a>
+                            <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="btn">Live Demo</a>
                         )}
                     </div>
                     {project.mediaLink && (
@@ -84,11 +86,11 @@ function Projects() {
                             )}
                         </div>
                     )}
-                </div>
+                </article>
             ))}
             {loading && <p>Loading...</p>}
-            {hasMore && (
-                <button onClick={fetchMoreProjects} className="btn" disabled={loading}>
+            {hasMore && !loading && (
+                <button onClick={fetchMoreProjects} className="btn">
                     Load More
                 </button>
             )}

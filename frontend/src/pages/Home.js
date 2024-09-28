@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
-
+import { Timestamp } from 'firebase/firestore';
 function Home() {
     const [recentPosts, setRecentPosts] = useState([]);
     const [featuredProjects, setFeaturedProjects] = useState([]);
@@ -40,42 +40,39 @@ function Home() {
     };
 
     return (
-        <div>
-            <section id="hero">
-                <h1>Welcome to My Portfolio</h1>
-                <p>Explore my latest blog posts, projects, and more.</p>
+        <div className="home container">
+            <section className="hero section">
+                <h1>Welcome to crispcode.io</h1>
+                <p>I'm a software developer passionate about building web applications and learning new technologies.</p>
             </section>
 
-            <section id="recent-posts">
-                <h2>Recent Blog Posts</h2>
+            <section className="featured-posts section">
+                <h2>Latest Blog Posts</h2>
                 {recentPosts.map(post => (
                     <article key={post.id} className="blog-post">
                         <h3><Link to={`/blog/${post.id}`}>{post.title}</Link></h3>
-                        <p className="date">{new Date(post.createdAt).toLocaleDateString()}</p>
-                        <Link to={`/blog/${post.id}`}>Read more</Link>
+                        <p className="date">{new Timestamp(post.createdAt.seconds, post.createdAt.nanoseconds).toDate().toLocaleDateString()}</p>
                     </article>
                 ))}
-                <Link to="/blog" className="btn">View All Blog Posts</Link>
             </section>
 
-            <section id="about">
-                <h2>About Me</h2>
-                <p>I'm a passionate developer with expertise in web technologies. I love creating responsive and user-friendly applications.</p>
-            </section>
-
-            <section id="projects">
+            <section className="featured-projects section">
                 <h2>Featured Projects</h2>
                 {featuredProjects.map(project => (
                     <div key={project.id} className="project">
                         <h3><Link to={`/project/${project.id}`}>{project.title}</Link></h3>
                         <p>{project.description.substring(0, 100)}...</p>
-                        <Link to={`/project/${project.id}`} className="btn">View Project</Link>
                     </div>
                 ))}
                 <Link to="/projects" className="btn">View All Projects</Link>
             </section>
 
-            <section id="links">
+            <section className="about-me section">
+                <h2>About Me</h2>
+                <p>Software engineer with 5+ years of experience working with small, medium, to large companies. My expertise is in Full Stack development using React frontend and .NET or Spring backend. Adaptable, I've had to work across AWS and Azure to scale services and deploy IoC pipelines.</p>
+            </section>
+
+            <section className="important-links section">
                 <h2>Important Links</h2>
                 <ul>
                     <li><a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">GitHub</a></li>

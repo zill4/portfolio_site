@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, query, orderBy, limit, startAfter, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
+import '../styles/Blog.css';
+import { Timestamp } from 'firebase/firestore';
 
 function Blog() {
     const [posts, setPosts] = useState([]);
@@ -56,15 +58,14 @@ function Blog() {
     };
 
     return (
-        <div className="blog">
+        <div className="blog container">
             <h1>Blog Posts</h1>
 
             {posts.map(post => (
-                <article key={post.id} className="blog-post">
+                <article key={post.id} className="blog-post section">
                     <h2><Link to={`/blog/${post.id}`}>{post.title}</Link></h2>
-                    <p className="date">{new Date(post.createdAt).toLocaleDateString()}</p>
+                    <p className="date">{new Timestamp(post.createdAt.seconds, post.createdAt.nanoseconds).toDate().toLocaleDateString()}</p>
                     <p>{post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}</p>
-                    <Link to={`/blog/${post.id}`}>Read more</Link>
                 </article>
             ))}
 
@@ -75,8 +76,6 @@ function Blog() {
                     Load More
                 </button>
             )}
-
-
         </div>
     );
 }
