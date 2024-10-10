@@ -38,14 +38,14 @@ function App() {
                   <li><Link to="/blog">Blog</Link></li>
                   <li><Link to="/projects">Projects</Link></li>
                   <li><Link to="/about">About</Link></li>
-                  {currentUser ? (
+                  {/* {currentUser ? (
                     <>
                       <li><Link to="/admin/dashboard">Admin Dashboard</Link></li>
                       <li><button onClick={handleLogout} className="logout-btn">Logout</button></li>
                     </>
                   ) : (
                     <li><Link to="/admin/login">Admin</Link></li>
-                  )}
+                  )} */}
                   <li><ThemeToggle /></li>
                 </ul>
               </nav>
@@ -60,7 +60,7 @@ function App() {
               <Route path="/projects" element={<Projects />} />
               <Route path="/project/:id" element={<ProjectDetail />} />
               <Route path="/about" element={<About />} />
-              <Route path="/admin/login" element={<Login />} />
+              {/* <Route path="/admin/login" element={<Login />} />
               <Route
                 path="/admin/dashboard"
                 element={
@@ -78,7 +78,7 @@ function App() {
                 <PrivateRoute>
                   <CreateBlogPost />
                 </PrivateRoute>
-              } />
+              } /> */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
